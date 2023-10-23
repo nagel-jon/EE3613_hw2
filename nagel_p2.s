@@ -6,7 +6,10 @@ strA:	.asciiz "Please enter your choice to skip numbers (1-4)\n"
 
 Numbers:	.word 100, -7, 11, 25, -66, 99, -1, 34, 12, 22, -2, -7, 100, 11, 4, 67, 2, -90, 22, 2, 56, 3, -89, 12, -10, 21, 10, -25, -6, 9, 111, 34, 12, 22, -2, -17, 100, 111, -4, 7, 14, -19, -2, 29, 36, 31, -79, 2 
 
- 
+ count: .word 0	#initialize count to 0
+
+ Counter: .word 50   # Initialize a word with the value 50
+
 
 .globl main 
 
@@ -39,57 +42,26 @@ li $t2, 0	#index
 
 
 loop:
-#check if index (t2) is less than Numbers Length (52 bytes)
-li $t3, 52
-beq $t2, $t3, end
+    beq $t1, $t0, done  # If the loop counter equals 50, exit the loop
 
-#check user input is valid choice (1-4)
-beq $t0, 1, skip1
-beq $t0, 2, skip2
-beq $t0, 3, skip3
-beq $t0, 4, skip4
-j end
+    # Your loop body goes here
+    lw $t2, Numbers($t2)
+    add $t1, $t1, $t2
 
 
-#N1+ N2 + N3 +...
-skip1:
-lw $t4, Numbers($t2)
-add $t1, $t1, $t4
-j increment
+    
 
+    addi $t1, $t1, 1  # Increment the loop counter
+    j loop
 
+done:
 
-
-
-
-skip2:
-skip3:
-skip4:
-
-increment:
-#move to next byte in Numbers
-addi $t2, $t2, 4
-j loop
-
-increment2:
-
-
-increment3:
-
-
-increment4:
-
-
-
-end:
-
-#print sum
-move $a0, $t1
-li $v0, 1
-syscall 
-
-li $v0, 10
-syscall
-
+    # Print the sum
+    li $v0, 1
+    move $a0, $t1
+    syscall
+    # Exit the program
+    li $v0, 10
+    syscall
 
 

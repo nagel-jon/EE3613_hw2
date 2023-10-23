@@ -6,7 +6,10 @@ strA:	.asciiz "Please enter your choice to skip numbers (1-4)\n"
 
 Numbers:	.word 100, -7, 11, 25, -66, 99, -1, 34, 12, 22, -2, -7, 100, 11, 4, 67, 2, -90, 22, 2, 56, 3, -89, 12, -10, 21, 10, -25, -6, 9, 111, 34, 12, 22, -2, -17, 100, 111, -4, 7, 14, -19, -2, 29, 36, 31, -79, 2 
 
- 
+ count: .word 0	#initialize count to 0
+
+ Counter: .word 50   # Initialize a word with the value 50
+
 
 .globl main 
 
@@ -37,39 +40,25 @@ move $t0, $v0 	#move into to $t0
 li $t1, 0	#sum
 li $t2, 0	#index
 
+li $t3, 1	#initialize $t0 to 1 for input 1
+
+la $a0, Numbers	#load array into $a0
+
+beq $t3, $t0, input1	#branch to input1 if $t0 = 1
 
 
-# Load the base address of the Numbers array into $t0
-la $t0, Numbers
-    
-# Load the first number from the array into $t1
-lw $t3, 0($t0)
-
-add $t1, $t1, $t3
-
-#print sum
-move $a0, $t3
-li $v0, 1
-syscall
-
-
-
-    
-j end
+input1:
+lw $t4, 0($a0)	#load first number into $t0
+add $t1, $t1, $t4	#add to sum
+addi $t2, $t2, 1	#increment index
+	
 
 
 
 
+done:
 
-end:
-
-#print sum
-move $a0, $t1
-li $v0, 1
-syscall 
-
-li $v0, 10
-syscall
-
-
+    # Exit the program
+    li $v0, 10
+    syscall
 
